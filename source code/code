@@ -1,0 +1,119 @@
+import tkinter as tk
+from tkinter import messagebox
+import random
+
+# Game variables
+stages = [
+    '''
+    +---+
+    |   |
+    0   |
+   /|\\ |
+   / \\ |
+===========
+''',
+    '''
+    +---+
+    |   |
+    0   |
+   /|\\ |
+   /    |
+===========
+''',
+    '''
+    +---+
+    |   |
+    0   |
+   /|\\ |
+        |
+===========
+''',
+    '''
+    +---+
+    |   |
+    0   |
+   /|   |
+        |
+===========
+''',
+    '''
+    +---+
+    |   |
+    0   |
+    |   |
+        |
+===========
+''',
+    '''
+    +---+
+    |   |
+    0   |
+        |
+        |
+===========
+''',
+    '''
+    +---+
+    |   |
+        |
+        |
+        |
+===========
+'''
+]
+
+word_list = ["apple", "beautiful", "potato"]
+chosen_word = random.choice(word_list)
+display = ['_' for _ in chosen_word]
+lives = 6
+
+# Function to handle letter guess
+def guess_letter():
+    global lives, display
+    guessed_letter = input_field.get().lower()
+    input_field.delete(0, tk.END)
+    if guessed_letter in chosen_word:
+        for position, letter in enumerate(chosen_word):
+            if letter == guessed_letter:
+                display[position] = guessed_letter
+        display_label.config(text=" ".join(display))
+        if '_' not in display:
+            messagebox.showinfo("Game Over", "You Win!!")
+            root.destroy()
+    else:
+        lives -= 1
+        hangman_label.config(text=stages[lives])
+        if lives == 0:
+            messagebox.showinfo("Game Over", "You Lose!!")
+            root.destroy()
+
+# Tkinter setup
+root = tk.Tk()
+root.title("Hangman - Code Editor Style")
+root.geometry("600x400")
+root.configure(bg="#282C34")  # Dark background to mimic a code editor
+
+# Title label
+title_label = tk.Label(root, text="Hangman Game", font=("Consolas", 18), bg="#282C34", fg="#61AFEF")
+title_label.pack(pady=10)
+
+# Hangman stage label
+hangman_label = tk.Label(root, text=stages[lives], font=("Courier", 12), bg="#282C34", fg="#E06C75")
+hangman_label.pack()
+
+# Display word
+display_label = tk.Label(root, text=" ".join(display), font=("Consolas", 16), bg="#282C34", fg="#98C379")
+display_label.pack(pady=10)
+
+# Input field
+input_label = tk.Label(root, text="Guess a letter:", font=("Consolas", 12), bg="#282C34", fg="#56B6C2")
+input_label.pack(pady=5)
+input_field = tk.Entry(root, font=("Consolas", 12), bg="#ABB2BF", fg="#282C34")
+input_field.pack(pady=5)
+
+# Guess button
+guess_button = tk.Button(root, text="Submit Guess", command=guess_letter, font=("Consolas", 12), bg="#61AFEF", fg="#282C34")
+guess_button.pack(pady=10)
+
+# Run the application
+root.mainloop()
